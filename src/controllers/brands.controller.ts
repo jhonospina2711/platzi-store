@@ -7,8 +7,9 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
-import { CreateBrandDto } from 'src/dtos/brand.dtos';
+import { CreateBrandDto, UpdateBrandDto } from 'src/dtos/brand.dtos';
 import { BrandsService } from 'src/services/brands.service';
 import { ParseIntPipe } from '../common/parse-int.pipe';
 
@@ -31,6 +32,17 @@ export class BrandsController {
     return this.brandsService.findById(brandId);
   }
 
-  //   @Delete('brandId')
-  //   delete() {}
+  @Delete(':brandId')
+  @HttpCode(HttpStatus.ACCEPTED)
+  delete(@Param('brandId', ParseIntPipe) brandId: number) {
+    return this.brandsService.delete(brandId);
+  }
+
+  @Put(':brandId')
+  update(
+    @Param('brandId', ParseIntPipe) brandId: number,
+    @Body() payload: UpdateBrandDto,
+  ) {
+    return this.brandsService.update(brandId, payload);
+  }
 }

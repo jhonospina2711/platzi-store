@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateBrandDto } from 'src/dtos/brand.dtos';
+import { CreateBrandDto, UpdateBrandDto } from 'src/dtos/brand.dtos';
 import { Brand } from '../entities/brand.entity';
 
 @Injectable()
@@ -22,6 +22,30 @@ export class BrandsService {
       throw new NotFoundException(`Brand #${id} not found`);
     }
     return brand;
+  }
+
+  delete(id: number) {
+    const index = this.brands.findIndex((item) => item.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`Brand #${id} not found`);
+    }
+    this.brands.splice(index, 1);
+    return true;
+  }
+
+  update(id: number, payload: UpdateBrandDto) {
+    this.brands = this.brands.map((data) => {
+      if (data.id === id) {
+        return {
+          ...data,
+          ...payload,
+        };
+      }
+      return {
+        ...data,
+      };
+    });
+    return this.brands;
   }
 
   create(payload: CreateBrandDto) {
